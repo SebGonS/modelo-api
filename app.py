@@ -3,6 +3,7 @@ from ultralytics import YOLO
 from supabase_utils import send_to_supabase
 from PIL import Image
 import io
+import uuid
 
 # Optional: from supabase_utils import send_to_supabase
 
@@ -15,7 +16,7 @@ async def predict(file: UploadFile = File(...)):
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     
     results = model(image)
-
+    detection_id = str(uuid.uuid4())
     detections = []
     from supabase_utils import send_to_supabase
 
@@ -26,6 +27,7 @@ async def predict(file: UploadFile = File(...)):
         cls_name = model.names[cls_id]
 
         detection = {
+            "detection_id": detection_id,
             "class": cls_name,
             "confidence": conf,
             "bbox_x1": x1,
