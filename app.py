@@ -17,6 +17,8 @@ async def predict(file: UploadFile = File(...)):
     results = model(image)
 
     detections = []
+    from supabase_utils import send_to_supabase
+
     for box in results[0].boxes:
         x1, y1, x2, y2 = box.xyxy[0].tolist()
         conf = float(box.conf[0])
@@ -26,10 +28,14 @@ async def predict(file: UploadFile = File(...)):
         detection = {
             "class": cls_name,
             "confidence": conf,
-            "bbox": [x1, y1, x2, y2]
+            "bbox_x1": x1,
+            "bbox_y1": y1,
+            "bbox_x2": x2,
+            "bbox_y2": y2
         }
 
         send_to_supabase(detection)
         detections.append(detection)
+
 
     return {"detections": detections}
