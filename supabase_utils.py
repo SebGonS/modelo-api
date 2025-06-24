@@ -1,7 +1,6 @@
 import requests
 import os
 
-# Load from Railway or .env (if using dotenv locally)
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
@@ -17,6 +16,7 @@ def send_to_supabase(detection):
     }
 
     payload = {
+        "detection_id": detection["detection_id"], 
         "class": detection["class"],
         "confidence": detection["confidence"],
         "bbox_x1": detection["bbox_x1"],
