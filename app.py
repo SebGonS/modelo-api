@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from ultralytics import YOLO
+from supabase_utils import send_to_supabase
 from PIL import Image
 import io
 
@@ -28,7 +29,7 @@ async def predict(file: UploadFile = File(...)):
             "bbox": [x1, y1, x2, y2]
         }
 
-        # Optional: send_to_supabase(detection)
+        send_to_supabase(detection)
         detections.append(detection)
 
     return {"detections": detections}
